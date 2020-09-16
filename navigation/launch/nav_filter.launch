@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+Software License Agreement (BSD)
+
+\file      husky_empty_world.launch
+\authors   Paul Bovbel <pbovbel@clearpathrobotics.com, Devon Ash <dash@clearpathrobotics.com>
+\copyright Copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or promote
+   products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WAR-
+RANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, IN-
+DIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<launch>
+  <param name="/use_sim_time" value="true"/>
+<!-- SLAM inserted here, maybe should put in the rviz call instead -->
+  <group ns="nav_filter">
+    <!-- SLAM -->
+    <node pkg="nav_filter"
+          name="nav_filter"
+          type="nav_filter_node"
+          output="screen">
+
+      <!-- Initial pose -->
+      <rosparam param="init">
+        position: {x: 0.0, y: 0.0, z: 0.0}
+        velocity: {vx: 0.0, vy: 0.0, vz: 0.0}
+        orientation: {qx: 0.0, qy: 0.0, qz: 0.0, qw: 1.0}
+        position_sigma: {x: 1.0, y: 1.0, z: 1.0}
+        velocity_sigma: {vx: 0.1, vy: 0.1, vz: 0.1}
+        orientation_sigma: {roll: 0.02, pitch: 0.02, yaw: 0.02}
+      </rosparam>
+
+      <!-- Rates -->
+      <rosparam file="$(find navigation)/config/nav_filter_parameters.yaml"/>
+
+    </node>
+  </group>
+    <include file="$(find aloam_velodyne)/launch/aloam_velodyne_HDL_32.launch"/>
+    <include file="$(find gicp_localization)/launch/test_online.launch"/>
+</launch>
